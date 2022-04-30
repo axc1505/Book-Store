@@ -1,0 +1,32 @@
+{
+  "books": [
+    {
+      "id": 1,
+      "name": "book 1",
+      "author": "book's author 1",
+      "dateAdded": "Sat Apr 30 2022 22:36:34",
+      "dateModified": "Sat Apr 30 2022 22:36:34"
+    },
+    {
+      "id": 2,
+      "name": "book 2",
+      "author": "book's author 2",
+      "dateAdded": "Sat Apr 30 2022 22:36:34",
+      "dateModified": "Sat Apr 30 2022 22:36:34"
+    },
+    {
+      "id": 3,
+      "name": "book 3",
+      "author": "book's author 3",
+      "dateAdded": "Sat Apr 30 2022 22:36:34",
+      "dateModified": "Sat Apr 30 2022 22:36:34"
+    },
+    {
+      "id": 4,
+      "name": "book 4",
+      "author": "book's author 4",
+      "dateAdded": "Sat Apr 30 2022 22:36:34",
+      "dateModified": "Sat Apr 30 2022 22:36:34"
+    }
+  ]
+}
