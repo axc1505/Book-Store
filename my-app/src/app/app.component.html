@@ -1,114 +1,148 @@
-<head>
-  <script data-require="angular.js@1.4.x" src="https://code.angularjs.org/1.4.3/angular.js" data-semver="1.4.3"></script>
-  <script src="script.js"></script>
-  </head>
-<body>
-<div class="flex justify-center">
+<div class="flex mt-14 justify-center">
   <div class="mb-3 xl:w-96">
     <div class="input-group relative flex items-stretch w-full mb-4">
-      <input [(ngModel)]="searchedKeyword" type="search" class=" relative flex-auto min-w-0 block w-full px-3 py-1.5 text-base font-normal text-gray-700 bg-white bg-clip-padding border border-solid border-gray-300 rounded transition ease-in-out m-0 focus:text-gray-700 focus:bg-white focus:border-blue-600 focus:outline-none" placeholder="Search">
-      <button class="btn inline-block px-6 py-2 border-2 border-cyan-600 text-blue-600 font-medium text-xs leading-tight uppercase rounded hover:bg-black hover:bg-opacity-5 focus:outline-none  transition duration-150 ease-in-out" type="button">Search</button>
+      <input
+        [(ngModel)]="searchedKeyword"
+        type="search"
+        class="relative flex-auto min-w-0 block w-full px-3 py-1.5 text-base font-normal text-gray-700 bg-white bg-clip-padding border border-solid border-gray-300 rounded transition ease-in-out m-0 focus:text-gray-700 focus:bg-white focus:border-blue-600 focus:outline-none"
+        placeholder="Search"
+      />
+      <button
+        (click)="onSearch()"
+        class="btn ml-2 inline-block px-6 py-2 border-2 border-cyan-600 text-blue-600 font-medium text-xs leading-tight uppercase rounded hover:bg-black hover:bg-opacity-5 focus:outline-none transition duration-150 ease-in-out"
+        type="button"
+      >
+        Search
+      </button>
     </div>
   </div>
 </div>
-  
-<div class="relative overflow-x-auto shadow-md sm:rounded-lg">
+<div
+  *ngIf="filteredList.length > 0"
+  class="relative mx-10 overflow-x-auto shadow-md sm:rounded-lg"
+>
   <table class="w-full text-sm text-left text-gray-500 dark:text-gray-400">
-  <thead class="text-xs text-gray-700 uppercase bg-cyan-400 dark:bg-cyan-400 dark:text-gray-400">
-  <tr>
-    <th scope="col" class="px-6 py-3 ">
-      Book Id 
-    </th>
-  <th scope="col" class="px-6 py-3 ">
-  Book Name  
-  </th>
-  <th scope="col" class="px-6 py-3">
-  Author
-  </th>
-  <th scope="col" class="px-6 py-3">
-  Date
-  </th>
-  <th scope="col" class="px-6 py-3">
-  Modified date
-  </th>
-   
-  </tr>
-  </thead>
-  <tbody  *ngFor="let book of books | filter:searchedKeyword">
-  <tr  class="bg-white border-b dark:bg-gray-800 dark:border-gray-700">
-  <th scope="row" class="px-6 py-4 font-medium text-gray-900 dark:text-white whitespace-nowrap">
-  {{book.id}}
-  </th>
-  <td class="px-6 py-4">
-    {{book.name}}
-  
-  </td>
-  <td class="px-6 py-4">
-    {{book.author}}
- 
-  </td>
-  <td class="px-6 py-4">
-    {{book.dateAdded}}
- 
-  </td>
-  <td class="px-6 py-4">
-    {{book.DateModified}}
-  </td>
-  
-  </tr>
-  <tr class="bg-white border-b dark:bg-gray-800 dark:border-gray-700">
-  </tbody>
+    <thead
+      class="text-xs text-gray-700 uppercase bg-cyan-400 dark:bg-cyan-400 dark:text-gray-400"
+    >
+      <tr>
+        <th scope="col" class="px-6 py-3">Book Id</th>
+        <th
+          scope="col"
+          class="px-6 py-3 hover:cursor-pointer"
+          (click)="sortBy('name')"
+        >
+          Book Name
+        </th>
+        <th scope="col" class="px-6 py-3">Author</th>
+        <th
+          scope="col"
+          class="px-6 py-3 hover:cursor-pointer"
+          (click)="sortBy('dateAdded')"
+        >
+          Date
+        </th>
+        <th scope="col" class="px-6 py-3">Modified date</th>
+        <th scope="col" class="px-6 py-3"></th>
+      </tr>
+    </thead>
+    <tbody *ngFor="let book of filteredList; let i = index">
+      <tr class="bg-white border-b dark:bg-gray-800 dark:border-gray-700">
+        <th
+          scope="row"
+          class="px-6 py-4 font-medium text-gray-900 dark:text-white whitespace-nowrap"
+        >
+          {{ i + 1 }}
+        </th>
+        <td class="px-6 py-4">
+          {{ book.name }}
+        </td>
+        <td class="px-6 py-4">
+          {{ book.author }}
+        </td>
+        <td class="px-6 py-4">
+          {{ book.dateAdded | date: "dd.MM.yyyy HH:mm:ss" }}
+        </td>
+        <td class="px-6 py-4">
+          {{ book.dateModified | date: "dd.MM.yyyy HH:mm:ss" }}
+        </td>
+        <td class="px-6 py-4">
+          <button
+            class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 mr-2 rounded"
+            (click)="onEdit(book.id)"
+            [ngClass]="{ 'opacity-50 cursor-not-allowed': editMode }"
+            [disabled]="editMode"
+          >
+            Edit
+          </button>
+          <button
+            class="bg-red-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded"
+            (click)="onDelete(book.id)"
+            [ngClass]="{ 'opacity-50 cursor-not-allowed': editMode }"
+            [disabled]="editMode"
+          >
+            Delete
+          </button>
+        </td>
+      </tr>
+      <tr class="bg-white border-b dark:bg-gray-800 dark:border-gray-700"></tr>
+    </tbody>
   </table>
-  </div>
-  
-
-
-  <div class="m-40">
-    <form class="bg-white shadow-md rounded px-8 pt-6 pb-8 mb-4" ng-submit="addRow()">
+</div>
+<div class="mx-40 mt-10">
+  <form
+    #form="ngForm"
+    (ngSubmit)="onSubmit(form)"
+    class="bg-white shadow-md rounded px-8 pt-6 pb-8 mb-4"
+  >
+    <div ngModelGroup="book" #nameCtrl="ngModelGroup">
       <div class="mb-4">
-        <label class="block text-gray-700 text-sm font-bold mb-2" for="username">
-         Book ID
-        </label>
-        <input ng-model="data.id"  name ="id" class="shadow border-1 border-black appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" id="username" type="text" placeholder="id">
-      </div>
-
-      <div class="mb-4">
-        <label class="block text-gray-700 text-sm font-bold mb-2" for="password">
+        <label
+          class="block text-gray-700 text-sm font-bold mb-2"
+          for="password"
+        >
           Book Name
         </label>
-        <input placeholder="Book Name" ng-model="data.name" name ="name" class="shadow appearance-none border border-black rounded w-full py-2 px-3 text-gray-700 mb-3 leading-tight focus:outline-none focus:shadow-outline" id="password" type="text" >
+        <input
+          placeholder="Book Name"
+          [ngModel]="book.name"
+          required
+          name="name"
+          class="shadow appearance-none border border-black rounded w-full py-2 px-3 text-gray-700 mb-3 leading-tight focus:outline-none focus:shadow-outline"
+          type="text"
+        />
       </div>
 
       <div class="mb-4">
-        <label class="block text-gray-700 text-sm font-bold mb-2" for="password">
+        <label
+          class="block text-gray-700 text-sm font-bold mb-2"
+          for="password"
+        >
           Book Author
         </label>
-        <input  ng-model="data.author" placeholder="Author Name"  name ="author" class="shadow appearance-none border border-black rounded w-full py-2 px-3 text-gray-700 mb-3 leading-tight focus:outline-none focus:shadow-outline" id="password" type="text">
+        <input
+          [ngModel]="book.author"
+          required
+          name="author"
+          placeholder="Author Name"
+          class="shadow appearance-none border border-black rounded w-full py-2 px-3 text-gray-700 mb-3 leading-tight focus:outline-none focus:shadow-outline"
+          type="text"
+        />
       </div>
+    </div>
 
-      <div class="mb-4">
-        <label class="block text-gray-700 text-sm font-bold mb-2" for="password">
-          Date 
-        </label>
-        <input  ng-model="data.date"placeholder="Date"  name ="date" class="shadow appearance-none border border-black rounded w-full py-2 px-3 text-gray-700 mb-3 leading-tight focus:outline-none focus:shadow-outline" id="password" type="text">
-      </div>
-
-      <div class="mb-4">
-        <label class="block text-gray-700 text-sm font-bold mb-2" for="password">
-          Modified date
-        </label>
-        <input  ng-model="data.md" placeholder="Modified Date"  name ="md" class="shadow appearance-none border border-black rounded w-full py-2 px-3 text-gray-700 mb-3 leading-tight focus:outline-none focus:shadow-outline" id="password" type="text">
-      </div>
-
-
-
-
-
-      <div class="flex items-center justify-between">
-        <button  ng-if="singleEmployeeSelected" ng-click="edit()" class="bg-green-500 hover:bg-green-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline" type="submit">
-          Update
-        </button>
-      </div>
-    </form>
-  </div>
-</body>
+    <div class="flex items-center justify-between">
+      <button
+        [disabled]="form.invalid"
+        class="bg-green-500 hover:bg-green-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"
+        type="submit"
+        [ngClass]="{
+          'bg-yellow-600 hover:bg-yellow-700': editMode,
+          'opacity-50 cursor-not-allowed': form.invalid
+        }"
+      >
+        {{ editMode ? "Update" : "Add" }}
+      </button>
+    </div>
+  </form>
+</div>
